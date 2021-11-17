@@ -1,0 +1,18 @@
+.formulario-registro {
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 10%;
+}
+
+table {
+    text-align: center !important;
+}
+
+th.mat-header-cell {
+    text-align: center !important;
+    font-size: 20px;
+}
+
+.input-filter-custom {
+    width: 100%;
+}

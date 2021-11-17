@@ -1,0 +1,154 @@
+<nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand">Usuarios</a>
+</nav>
+<div class="modal" tabindex="-1" role="dialog" id="modalCreateUser">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Crear Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="userForm" (ngSubmit)="guardar()">
+                    <div class="form-group">
+                        <label>Nombres:</label>
+                        <input type="text" formControlName="firstName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellidos:</label>
+                        <input type="text" formControlName="lastName" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Cedula:</label>
+                        <input type="number" formControlName="document" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electronico:</label>
+                        <input type="text" formControlName="email" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="userForm.invalid">Crear</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="formulario-registro">
+    <div class="ng-container">
+        <div class="row">
+            <div class="col-2">
+                <button type="button" class="btn btn-secondary btn-lg btn-block" data-toggle="modal" data-target="#modalCreateUser">Crear usuario</button>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="standard" class="input-filter-custom">
+                    <mat-label>Busqueda</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" #input>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="listData" class="mat-elevation-z8" style="width: 100%;" matSort>
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- id Column -->
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- firstName Column -->
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+        </ng-container>
+
+        <!-- lastName Column -->
+        <ng-container matColumnDef="lastName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellido </th>
+            <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+        </ng-container>
+
+        <!-- document Column -->
+        <ng-container matColumnDef="document">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cedula </th>
+            <td mat-cell *matCellDef="let element"> {{element.document}} </td>
+        </ng-container>
+
+        <!-- email Column -->
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <!-- actions Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Opciones</th>
+            <td mat-cell *matCellDef="let row">
+                <button type="button" class="btn btn-outline-primary" (click)="openModalUpdate(template, row)">Editar</button>
+                <button type="button" class="btn btn-outline-success" style="margin-left: 15px;" (click)="verTarjetas(row)">Ver tarjetas</button>
+                <button type="button" class="btn btn-outline-danger" (click)="eliminar(row)" style="margin-left: 15px;">Eliminar</button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef colspan="6">
+                Loading data...
+            </mat-footer-cell>
+        </ng-container>
+        <ng-container matColumnDef="noData">
+            <mat-footer-cell *matFooterCellDef colspan="6">
+                No data.
+            </mat-footer-cell>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+
+        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+
+</div>
+
+
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Actualizar usuario</h4>
+        <button type="button" class="close btn-close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="userFormUpdate" (ngSubmit)="actualizar()">
+            <div class="form-group">
+                <label>Nombres:</label>
+                <input type="text" formControlName="firstName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Apellidos:</label>
+                <input type="text" formControlName="lastName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Cedula:</label>
+                <input type="number" formControlName="document" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Correo Electronico:</label>
+                <input type="text" formControlName="email" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="userFormUpdate.invalid">Actualizar</button>
+
+        </form>
+    </div>
+</ng-template>
